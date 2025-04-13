@@ -1,0 +1,35 @@
+
+@page "/productlist"
+ @inject HttpClient Http
+
+ <h3>Product List</h3>
+
+ @if (products == null)
+ {
+     <p><em>Loading...</em></p>
+ }
+ else
+ {
+     <ul>
+         @foreach (var product in products)
+         {
+             <li>@product.Name - $@product.Price</li>
+         }
+     </ul>
+ }
+
+ @code {
+     private List<Product> products;
+
+     protected override async Task OnInitializedAsync()
+     {
+         products = await Http.GetFromJsonAsync<List<Product>>("http://localhost:5262/api/product");
+     }
+
+     public class Product
+     {
+         public int Id { get; set; }
+         public string Name { get; set; }
+         public decimal Price { get; set; }
+     }
+ }
